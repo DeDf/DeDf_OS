@@ -1,6 +1,8 @@
 
 I/O PORTS : http://stanislavs.org/helppc/ports.html
 
+http://www.nasm.us/pub/nasm/releasebuilds/2.12.02/win32/nasm-2.12.02-win32.zip
+
 nasm boot\boot.asm
 nasm boot\setup.asm 
 
