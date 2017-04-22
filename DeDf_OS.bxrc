@@ -7,7 +7,7 @@ romimage: file="d:\Program Files\Bochs-2.6.8/BIOS-bochs-latest"
 vgaromimage: file="d:\Program Files\Bochs-2.6.8/VGABIOS-lgpl-latest"
 boot: floppy
 floppy_bootsig_check: disabled=0
-floppya: type=1_44, 1_44="d:\P\OS\ucore64\mouseOS.img", status=inserted, write_protected=0
+floppya: type=1_44, 1_44="d:\P\OS\DeDf_OS\DeDf_OS.img", status=inserted, write_protected=0
 # no floppyb
 ata0: enabled=1, ioaddr1=0x1f0, ioaddr2=0x3f0, irq=14
 ata0-master: type=none
@@ -42,7 +42,7 @@ sound: waveoutdrv=win, waveout=none, waveindrv=win, wavein=none, midioutdrv=win,
 speaker: enabled=1, mode=sound
 parport1: enabled=1, file=none
 parport2: enabled=0
-com1: enabled=1, mode=pipe-server, dev="\\.\pipe\ooss"
+com1: enabled=1, mode=pipe-server, dev="\\.\pipe\DeDf_OS"
 com2: enabled=0
 com3: enabled=0
 com4: enabled=0
