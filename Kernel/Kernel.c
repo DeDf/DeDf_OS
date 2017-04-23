@@ -76,15 +76,18 @@ static void serial_putc_sub(int c)
 /* serial_putc - print character to serial port */
 static void serial_putc(int c)
 {
-    if (c == '\b')  // BackSpace 删除前一个字符
+    if (serial_exists)
     {
-        serial_putc_sub('\b');
-        serial_putc_sub(' ');
-        serial_putc_sub('\b');
-    }
-    else
-    {
-        serial_putc_sub(c);
+        if (c == '\b')  // BackSpace 删除前一个字符
+        {
+            serial_putc_sub('\b');
+            serial_putc_sub(' ');
+            serial_putc_sub('\b');
+        }
+        else
+        {
+            serial_putc_sub(c);
+        }
     }
 }
 
@@ -93,13 +96,16 @@ static void serial_putc(int c)
 int main()
 {
     const unsigned char *p = "Kernel is loading ...\n";
-    int StrLen = sizeof("Kernel is loading ...\n") - 1;
+    int StrLen      = sizeof("Kernel is loading ...\n") - 1;
     int i;
 
     serial_init();
-    for (i = 0; i < StrLen; i++)
+    if (serial_exists)
     {
-        serial_putc((int)*(p+i));
+        for (i = 0; i < StrLen; i++)
+        {
+            serial_putc((int)*(p+i));
+        }
     }
 
     cga_init();
