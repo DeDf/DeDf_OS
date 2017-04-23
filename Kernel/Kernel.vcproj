@@ -304,8 +304,9 @@
 				SubSystem="1"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
-				EntryPointSymbol="Init"
+				EntryPointSymbol="main"
 				BaseAddress="0xffff800000000000"
+				MergeSections=".rdata=.data"
 				TargetMachine="17"
 				FixedBaseAddress="2"
 			/>
@@ -344,6 +345,14 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath=".\CGA.c"
+				>
+			</File>
+			<File
+				RelativePath=".\common.c"
+				>
+			</File>
+			<File
 				RelativePath=".\Kernel.c"
 				>
 			</File>
@@ -353,6 +362,10 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\common.h"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\Readme.txt"

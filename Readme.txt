@@ -15,8 +15,10 @@ WDK7.1 ml64 Kernel\regs.asm，拷贝regs.obj到 Kernel 目录下
 修改入口点:     项目属性->链接器->高级->入口点（输入自定义函数名称 Init）
 修改image基址:  项目属性->链接器->高级->基址（0xffff800000000000）
 固定基址:       项目属性->链接器->高级->固定基址（/FIXED）
-去除调试信息:   项目属性->链接器->调试->生成调试信息（否）
-合并数据段:     #pragma comment(linker, "/MERGE:.rdata=.data")
+合并数据段:     项目属性->链接器->高级->合并区（.rdata=.data）
+//合并数据段:     #pragma comment(linker, "/MERGE:.rdata=.data")
+//去除调试信息:   项目属性->链接器->调试->生成调试信息（否）
+
 嵌入汇编:
 ml64 xxx.asm
 把xxx.obj 拷贝到工程目录下，并加到  项目属性->链接器->输入->附加依赖项

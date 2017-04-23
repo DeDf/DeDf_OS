@@ -1,17 +1,5 @@
 
-#pragma comment (linker, "/MERGE:.rdata=.data")
-
-typedef          char      int8_t;
-typedef unsigned char     uint8_t;
-
-typedef          short    int16_t;
-typedef unsigned short   uint16_t;
-
-typedef          int      int32_t;
-typedef unsigned int     uint32_t;
-
-typedef          __int64  int64_t;
-typedef unsigned __int64 uint64_t;
+#include "common.h"
 
 /***** Serial I/O code *****/
 #define COM1            0x3F8
@@ -36,17 +24,6 @@ typedef unsigned __int64 uint64_t;
 #define COM_LSR_TXRDY   0x20	// Transmit buffer avail
 #define COM_LSR_TSRE    0x40	// Transmitter off
 #define COM_BAUDRATE    115200
-
-#define CONSBUFSIZE 512
-
-static struct {
-    uint8_t buf[CONSBUFSIZE];
-    uint32_t rpos;
-    uint32_t wpos;
-} cons;
-
-void outb(uint16_t port, uint8_t data);
-uint8_t inb(uint16_t port);
 
 int serial_exists;
 
@@ -99,7 +76,7 @@ static void serial_putc_sub(int c)
 /* serial_putc - print character to serial port */
 static void serial_putc(int c)
 {
-    if (c == '\b')
+    if (c == '\b')  // BackSpace 删除前一个字符
     {
         serial_putc_sub('\b');
         serial_putc_sub(' ');
@@ -111,17 +88,25 @@ static void serial_putc(int c)
     }
 }
 
-int Init()
+//======================入口点========================
+
+int main()
 {
-    const unsigned char *p = "(THU.CST) os is loading ...\n";
-    int StrLen = sizeof("(THU.CST) os is loading ...\n") - 1;
+    const unsigned char *p = "Kernel is loading ...\n";
+    int StrLen = sizeof("Kernel is loading ...\n") - 1;
     int i;
 
     serial_init();
-    
     for (i = 0; i < StrLen; i++)
     {
         serial_putc((int)*(p+i));
+    }
+
+    cga_init();
+    cga_putc((int)'\n');
+    for (i = 0; i < StrLen; i++)
+    {
+        cga_putc((int)*(p+i));
     }
 
 L_spin:

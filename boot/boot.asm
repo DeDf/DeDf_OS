@@ -79,24 +79,6 @@ SYSTEM_CONTROL_PORT             equ     0x92
    call load_module
    jc failure
 
-; load runtine module from floppy ROUTINE_SECTOR
-   mov di, ROUTINE_SECTOR
-   mov si, ROUTINE_SEG - 8
-   call load_module
-   jc failure   
-
-; load mickey module from floppy MICKEY_SECTOR
-   mov di, MICKEY_SECTOR
-   mov si, MICKEY_SEG - 8
-   call load_module
-   jc failure
-
-; load driver module from floppy DRIVER_SECTOR
-   mov di, DRIVER_SECTOR
-   mov si, DRIVER_SEG - 8
-   call load_module
-   jc failure
-
 ;-----------------------------------------------
 ; goto setup module
 ;------------------------------------------------   
