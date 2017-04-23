@@ -296,7 +296,6 @@
 			<Tool
 				Name="VCLinkerTool"
 				LinkLibraryDependencies="true"
-				AdditionalDependencies="regs.obj"
 				OutputFile="..\$(ProjectName).exe"
 				LinkIncremental="1"
 				IgnoreAllDefaultLibraries="true"
@@ -355,6 +354,19 @@
 			<File
 				RelativePath=".\Kernel.c"
 				>
+			</File>
+			<File
+				RelativePath=".\regs.asm"
+				>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="ml64 /c regs.asm"
+						Outputs="regs.obj"
+					/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

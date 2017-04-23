@@ -109,8 +109,7 @@ int main()
         cga_putc((int)*(p+i));
     }
 
-L_spin:
-    goto L_spin;
+    cpu_idle();  // while(1) {_asm hlt};
 	return 0;
 }
 

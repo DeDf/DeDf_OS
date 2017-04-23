@@ -8,8 +8,6 @@ nasm boot\setup.asm
 
 kernel 编译选项选 x64
 
-WDK7.1 ml64 Kernel\regs.asm，拷贝regs.obj到 Kernel 目录下
-
 关闭GS开关: 项目属性->C/C++->代码生成->缓冲区安全检查（否）
 忽略所有默认库: 项目属性->链接器->输入->忽略所有默认库（是）
 修改入口点:     项目属性->链接器->高级->入口点（输入自定义函数名称 Init）
@@ -20,8 +18,11 @@ WDK7.1 ml64 Kernel\regs.asm，拷贝regs.obj到 Kernel 目录下
 //去除调试信息:   项目属性->链接器->调试->生成调试信息（否）
 
 嵌入汇编:
-ml64 xxx.asm
-把xxx.obj 拷贝到工程目录下，并加到  项目属性->链接器->输入->附加依赖项
+右键项目->添加->xxx.asm文件
+右键xxx.asm，属性
+自定义生成步骤->常规:
+  命令行(ml64 /c xxx.asm)
+  输出(xxx.obj)
 
 Debug版：
 项目属性->基本运行时检查（默认值）

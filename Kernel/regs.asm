@@ -17,4 +17,10 @@ xchg rcx, rdx
 ret
 outb ENDP
 
+cpu_idle PROC
+L:
+hlt
+jmp L
+cpu_idle ENDP
+
 END
