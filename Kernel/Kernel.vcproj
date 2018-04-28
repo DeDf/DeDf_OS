@@ -359,11 +359,20 @@
 				RelativePath=".\regs.asm"
 				>
 				<FileConfiguration
-					Name="Release|x64"
+					Name="Debug|Win32"
 					>
 					<Tool
 						Name="VCCustomBuildTool"
 						CommandLine="ml64 /c regs.asm"
+						Outputs="regs.obj"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|x64"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="ml64 /c regs.asm&#x0D;&#x0A;"
 						Outputs="regs.obj"
 					/>
 				</FileConfiguration>
@@ -379,10 +388,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\Readme.txt"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

@@ -284,7 +284,7 @@ get_system_memory_failure:
    xor eax, eax
 
 get_system_memory_done:  
-	mov eax, 1
+   mov eax, 1
    ret
 
 

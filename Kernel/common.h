@@ -14,7 +14,7 @@ typedef unsigned int     uint32_t;
 typedef          __int64  int64_t;
 typedef unsigned __int64 uint64_t;
 
-typedef unsigned __int64   size_t;
+//typedef unsigned __int64   size_t;
 
 //=================regs.asm=================
 void outb(uint16_t port, uint8_t data);
