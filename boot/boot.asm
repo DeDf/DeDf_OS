@@ -39,7 +39,7 @@ read_sector:
    mov si, DISK_ADDRESS_PACKET
    int 0x13
    jc failure
-   jmp 0x6300
+   jmp 0x7e00
 
 memory_failure:
    lea si, [mem_msg]
@@ -55,7 +55,7 @@ DISK_ADDRESS_PACKET:
    db 0x10       ; sizeof (Disk Address Packet)
    db 0          ; unused, should be zero
    dw 1          ; Number of sectors to Read
-   dd 0x6300     ; buf address
+   dd 0x7e00     ; buf address
    dq 1          ; start sector number of read (1st sector of drive has number 0)
 
 ;---------------------------------------------------
@@ -76,9 +76,11 @@ done:
 ;---------------------------------------------------
 get_system_memory:
 
-mem_segment_count   eq 0x6004
-mem_total           eq 0x6008
-ARDS_table          eq 0x6010
+memseg_count_low    equ 0x6000
+memseg_count_high   equ 0x6004
+mem_OS_low          equ 0x6008
+mem_OS_high         equ 0x600c
+ARDS_table          equ 0x6010
 
 ;struct e820entry {  
 ;    __u64 addr; /* start of memory segment */
@@ -88,6 +90,10 @@ ARDS_table          eq 0x6010
 
 do_e820:
    xor ebx, ebx
+   mov [memseg_count_low],  ebx
+   mov [memseg_count_high], ebx
+   mov [mem_OS_low],        ebx
+   mov [mem_OS_high],       ebx
    mov edi, ARDS_table          ; 存放ARDS表
 
 do_e820_loop:   
@@ -104,15 +110,19 @@ do_e820_loop:
 ; --- use e820 get memory size ---   
 
    mov eax, dword [edi+16]      ; ARDS.type
-   cmp eax, 4
-   jge do_e820_next
-   mov eax, dword [edi]         ; baseLow
+   cmp eax, 1                   ; type == OS_RAM
+   jne do_e820_next
+   mov eax, dword [mem_OS_low]
    mov esi, dword [edi+8]       ; lengthLow
    add eax, esi
-   mov [mem_total], eax
+   mov [mem_OS_low], eax
+   mov eax, dword [mem_OS_high]
+   mov esi, dword [edi+0xc]     ; lengthHigh
+   adc eax, esi
+   mov [mem_OS_high], eax
    
 do_e820_next:   
-   mov dword [mem_segment_count], ebx
+   mov dword [memseg_count_low], ebx  ; ebx值为内存块index，从1开数
    add edi, ecx
    jmp do_e820_loop
    
