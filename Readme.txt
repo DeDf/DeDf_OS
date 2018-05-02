@@ -26,3 +26,13 @@ kernel 编译选项选 x64
 
 Debug版：
 项目属性->基本运行时检查（默认值）
+
+dedf_os.img 用winhex编辑的话，需要去掉img后缀名。
+
+bochsdbg.exe->DeDf_OS.bxrc,
+调试命令：
+断点：b 0x7c00
+运行：c
+步入：s
+步过：p
+输入trace-reg on, 再执行单步调试的时候都会显示寄存器的当前状态了.

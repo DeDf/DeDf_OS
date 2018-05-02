@@ -1,17 +1,4 @@
 
-; *********************************************************
-; * setup.asm for mouseOS operating system project        *
-; *                                                       * 
-; * Copyright (c) 2009-2010                               *
-; * All rights reserved.                                  *
-; * mik(deng zhi)                                         *
-; * visit web site : www.mouseos.com                      *
-; * bug send email : mik@mouseos.com                      *
-; *                                                       *
-; * version 0.01 by mik                                   *  
-; *********************************************************
-
-
 SETUP_SEG         equ 0x6000        ; setup module load into SETUP_SEG
 INIT_SEG          equ 0x9000
 
@@ -249,6 +236,11 @@ mem_rang_buf times (20*19)              db 0
 ;----------------------------   
 get_system_memory:
 
+;struct e820entry {
+;    __u64 addr; /* start of memory segment */
+;    __u64 size; /* size of memory segment */
+;    __u32 type; /* type of memory segment */
+;}
 ; now: try int15/e820h for get memory size
 do_e820:
    mov ebx, 0
@@ -256,7 +248,7 @@ do_e820:
 
 do_e820_loop:   
    mov eax, 0xe820
-   mov ecx, 20              ; sizeof(ARDS) == 20
+   mov ecx, 20              ; sizeof(ARDS) == 20, Address Range Descriptor Structure
    mov edx, 0x534d4150      ; 'SMAP'
    int 0x15
    jc get_system_memory_failure
@@ -267,7 +259,7 @@ do_e820_loop:
    
 ; --- use e820 get memory size ---   
 
-   mov eax, dword [edi+16]      ; type ?
+   mov eax, dword [edi+16]      ; ARDS.type
    cmp eax, 4
    jge do_e820_next
    mov eax, dword [edi]         ; baseLow
