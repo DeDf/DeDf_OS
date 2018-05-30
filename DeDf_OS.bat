@@ -1,1 +1,1 @@
-"D:\Program Files\Bochs-2.6.8\bochsdbg.exe" -q -f DeDf_OS.bxrc
+"D:\Program Files\Bochs-2.6.9\bochsdbg.exe" -q -f DeDf_OS.bxrc

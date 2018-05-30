@@ -29,6 +29,7 @@ Debug版：
 
 dedf_os.img 用winhex编辑的话，需要去掉img后缀名。
 
+Bochs-2.6.9
 bochsdbg.exe->DeDf_OS.bxrc,
 调试命令：
 断点：b 0x7c00

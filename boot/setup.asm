@@ -1,79 +1,16 @@
 
 SETUP_SEG         equ 0x6000        ; setup module load into SETUP_SEG
 INIT_SEG          equ 0x9000
-
 TEMP_PML4T_BASE   equ 0x100000      ; temp pml4t base address(CR3)
 
 ;
-; real mode (SETUP_SEG: 0x6000)
-;         |
-;         \--------> temp protected mode (32 bit)
-;                             |
-;                             \--------> set long mode system data structure
-;                                                        |
-;                                                        |
-;                                                        \--------> finaly long mode: 64 bit mode
-;                                                                                 |
-;                                                                                 |
-;                     kernel (mickey)  <------------------------------------------/
-;                     (0xffff8000_00400000)
+;    kernel (mickey) (0xffff8000_00400000)
 ;
 
-   bits 16
-   org SETUP_SEG - 4
-
-setup_length   dd   setup_end - setup_entry
-
-setup_entry:
-
-   mov ax, cs
-   mov ds, ax
-   mov es, ax
-   mov ss, ax
-   mov sp, SETUP_SEG - 4
-
-   call get_system_memory         ; get the machine's main memory
-   test eax, eax
-   jz memory_failure
-
-   mov eax, 0x80000000            ; test cpu        
-   cpuid 
-   cmp eax, 0x80000000            ;   is support externed feature ?
-   jbe setup_failure
-   mov eax, 0x80000001            ;   get cupid
-   cpuid
-   bt edx, 29                     ;   is support long mode ?
-   jc setup_next
-
-printmsg:
-   lodsb
-   test al,al
-   jz done
-   int 0x10
-   jmp printmsg
-done:
-   ret
-
-failure_msg1 db 'your cpu is not support long-mode. system halt !!!', 0
-
-setup_failure:
-   lea esi, [failure_msg1]
-   mov ah, 0x0e
-   xor bh, bh
-   call printmsg
-   jmp $
-
-failure_msg2 db 'memory is not enought', 0
-
-memory_failure:   
-   lea esi, [failure_msg2]
-   mov ah, 0x0e
-   xor bh, bh
-   call printmsg
-   jmp $
-
-
-setup_next:                       ; Enter proected mode
+;---------------------------------------------------
+; Enter proected mode
+;---------------------------------------------------
+setup_next:
 
 CMOS_INDEX_PORT         equ 0x70
 
@@ -225,60 +162,6 @@ code64_entry:
    push code64_sel                    ; temp_GDT entry
    push rax
    dw 0xcb48                          ; retf_qword
-
-
-   bits 16
-   align 4
-mem_rangs                               dd 0
-mem_total                               dq 0
-mem_rang_buf times (20*19)              db 0
-
-;----------------------------   
-get_system_memory:
-
-;struct e820entry {
-;    __u64 addr; /* start of memory segment */
-;    __u64 size; /* size of memory segment */
-;    __u32 type; /* type of memory segment */
-;}
-; now: try int15/e820h for get memory size
-do_e820:
-   mov ebx, 0
-   mov edi, mem_rang_buf
-
-do_e820_loop:   
-   mov eax, 0xe820
-   mov ecx, 20              ; sizeof(ARDS) == 20, Address Range Descriptor Structure
-   mov edx, 0x534d4150      ; 'SMAP'
-   int 0x15
-   jc get_system_memory_failure
-   xor eax, 0x534d4150      ; 'SMAP'
-   jnz get_system_memory_failure
-   test ebx, ebx
-   jz get_system_memory_done
-   
-; --- use e820 get memory size ---   
-
-   mov eax, dword [edi+16]      ; ARDS.type
-   cmp eax, 4
-   jge do_e820_next
-   mov eax, dword [edi]         ; baseLow
-   mov esi, dword [edi+8]       ; lengthLow
-   add eax, esi
-   mov [mem_total], eax
-   
-do_e820_next:   
-   mov dword [mem_rangs], ebx
-   add edi, ecx
-   jmp do_e820_loop
-   
-get_system_memory_failure:
-   xor eax, eax
-
-get_system_memory_done:  
-   mov eax, 1
-   ret
-
 
    bits 32
 

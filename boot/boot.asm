@@ -4,7 +4,6 @@
 ;-------------------------------------------------------------------------
 
    bits 16       ; 指定为16位汇编模式
-
    org 0x7c00    ; 指定程序的起始地址为0x7c00
 
 start:
@@ -27,36 +26,33 @@ start:
 
 ;---------------------------------------------------
 
-   lea si, [load_msg]
-   call print
-
    call get_system_memory
    test eax, eax
    jz memory_failure
+   
+;---------------------------------------------------
 
-read_sector:
-   mov ah, 0x42  ; INT 13h AH=42h: Extended Read Sectors From Drive
-   mov si, DISK_ADDRESS_PACKET
-   int 0x13
-   jc failure
-   jmp 0x7e00
+   mov eax, 0x80000000            ; test cpu        
+   cpuid 
+   cmp eax, 0x80000000            ;   is support externed feature ?
+   jbe cpu_no_long
+   mov eax, 0x80000001            ;   get cupid
+   cpuid
+   bt edx, 29                     ;   is support long mode ?
+   jnc cpu_no_long
+   jmp $
 
+;---------------------------------------------------
+
+cpu_no_long:
+   lea esi, [cpu_no_long_msg]
+   call print
+   jmp $
+   
 memory_failure:
    lea si, [mem_msg]
    call print
    jmp $
-   
-failure:
-   lea si, [fail_msg]
-   call print
-   jmp $
-
-DISK_ADDRESS_PACKET:
-   db 0x10       ; sizeof (Disk Address Packet)
-   db 0          ; unused, should be zero
-   dw 1          ; Number of sectors to Read
-   dd 0x7e00     ; buf address
-   dq 1          ; start sector number of read (1st sector of drive has number 0)
 
 ;---------------------------------------------------
 ; print()
@@ -135,9 +131,8 @@ get_system_memory_done:
 
 ;---------------------------------------------------
 
-load_msg         db 'load DeDf_OS ~', 0
-mem_msg          db 'e820 failed !!', 0
-fail_msg         db 'read sector failed !!', 0
+mem_msg          db 'e820 !',  0
+cpu_no_long_msg  db 'no long mode !', 0
 
 times 510-($-$$) db 0   ; $ 是当前位置, $$ 是段开始位置, $ - $$ 是当前位置在段内的偏移
 
